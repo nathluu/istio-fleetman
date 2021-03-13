@@ -1,6 +1,6 @@
-FROM openjdk:8u131-jre
+FROM openjdk:8u212-jre-alpine
 
-MAINTAINER Richard Chesterwood "richard@inceptiontraining.co.uk"
+RUN apk --no-cache add curl
 
 ADD maven/positionsimulator-0.0.1-SNAPSHOT.jar webapp.jar
 

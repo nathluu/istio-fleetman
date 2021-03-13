@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.virtualpairprogrammers</groupId>
-	<artifactId>fleetman</artifactId>
+	<artifactId>fleetman-api-gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -55,8 +55,12 @@
    		<dependency>
  	   		<groupId>org.springframework.cloud</groupId>
     		<artifactId>spring-cloud-starter-openfeign</artifactId>
-    	</dependency> 	
-	</dependencies>
+    	</dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+    </dependencies>
 	
 	<build>
 		<plugins>
@@ -69,22 +73,22 @@
  			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.21.0</version>
+				<version>0.34.1</version>
 			
 				<configuration>			
 			        <!-- <dockerHost>unix:///var/run/docker.sock</dockerHost> -->
-			        <dockerHost>tcp://192.168.99.155:2376</dockerHost>  
-                    <certPath>C:\cygwin64\home\Richard\.minikube\certs</certPath>
+			        <dockerHost>http://localhost:2375</dockerHost>
+<!--                    <certPath>C:\cygwin64\home\Richard\.minikube\certs</certPath>-->
+					<useColor>true</useColor>
 			
 			        <verbose>true</verbose>
         			<extensions>true</extensions>
 			        		     
 					<images>
 						<image>
-							<name>richardchesterwood/istio-fleetman-api-gateway</name>
+							<name>nathluu/istio-fleetman-api-gateway</name>
 							<build>
 								<dockerFileDir>${project.basedir}/src/main/docker/</dockerFileDir>
-			
 								<assembly>
 									<descriptorRef>artifact</descriptorRef>
 								</assembly>

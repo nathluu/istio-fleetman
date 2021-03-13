@@ -9,4 +9,6 @@ buildNumber.properties
 .mvn/timing.properties
 .classpath
 .project
+.idea
 /bin/
+positionsimulator.iml

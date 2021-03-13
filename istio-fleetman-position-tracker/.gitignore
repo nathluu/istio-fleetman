@@ -10,3 +10,5 @@ buildNumber.properties
 /bin/
 .classpath
 .project
+.idea
+positionreceiver.iml
