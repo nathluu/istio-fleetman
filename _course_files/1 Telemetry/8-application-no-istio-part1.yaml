@@ -47,29 +47,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-gateway
-spec:
-  selector:
-    matchLabels:
-      app: api-gateway
-  replicas: 1
-  template: # template for the pods
-    metadata:
-      labels:
-        app: api-gateway
-    spec:
-      containers:
-      - name: api-gateway
-        image: nathluu/istio-fleetman-api-gateway:6
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: production-microservice
-        command: ["java","-Xmx50m","-jar","webapp.jar"]
-        imagePullPolicy: Always
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: vehicle-telemetry
 spec:
   selector:
@@ -124,18 +101,6 @@ spec:
   # or maybe external users to connect to (eg browser)
   selector:
     app: position-tracker
-  ports:
-    - name: http
-      port: 8080
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fleetman-api-gateway
-spec:
-  selector:
-    app: api-gateway
   ports:
     - name: http
       port: 8080
