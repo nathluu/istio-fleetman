@@ -9,10 +9,10 @@ fi
 pushd certs
 make -f ../tools/certs/Makefile.selfsigned.mk root-ca
 
-ctxs=$(kubectl config view -o jsonpath='{.contexts[*].name}' | grep -v "docker-desktop")
-for ctx in ctxs
+ctxs=$(kubectl config view -o jsonpath='{.contexts[*].name}' | grep -v "docker-desktop" | sed 's/ /\n/g')
+for ctx in $ctxs
 do
-make -f ../tools/certs/Makefile.selfsigned.mk $ctx-cacerts
+make -f ../tools/certs/Makefile.selfsigned.mk "$ctx-cacerts"
 kubectl config use-context $ctx
 kubectl create namespace istio-system
 kubectl create secret generic cacerts -n istio-system \
