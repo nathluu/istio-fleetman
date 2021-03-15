@@ -1,5 +1,5 @@
-#!/bin/bash
-set -euxo pipefail
+#!/usr/bin/env sh
+#set -euxo pipefail
 
 ctxs=$(kubectl config view -o jsonpath='{.contexts[*].name}' | grep -v "docker-desktop" | sed 's/ /\n/g')
 for ctx in $ctxs
@@ -24,8 +24,7 @@ spec:
       network: network1
 EOF
 istioctl install -f $ctx.yaml -y
-sleep 10
 kubectl apply -f addons/
-sleep 10
+sleep 5
 kubectl apply -f addons/
 done
