@@ -26,7 +26,7 @@ kubectl apply -f ../addons/
 sleep 10
 kubectl apply -f ../addons/
 
-$ cat <<EOF > $ctx.yaml
+cat <<EOF > $ctx.yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 spec:
