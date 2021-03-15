@@ -33,7 +33,8 @@ spec:
         clusterName: $ctx
       network: network1
 EOF
-istioctl install -f $ctx.yaml
+istioctl install -f $ctx.yaml -y
+sleep 10
 # istioctl install --skip-confirmation
 kubectl apply -f ../addons/
 sleep 10
