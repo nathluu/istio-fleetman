@@ -1,3 +1,4 @@
 /.metadata/
 target/
 .recommenders/
+deployment/azure/multicluster/pluginCA/certs

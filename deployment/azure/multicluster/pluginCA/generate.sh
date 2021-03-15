@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 if [ -d certs ]; then
   echo "certs folder exists"
 else
