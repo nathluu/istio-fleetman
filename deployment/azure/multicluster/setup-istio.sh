@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euxo pipefail
+#set -euxo pipefail
 pushd pluginCA
 bash generate.sh
 
@@ -8,7 +8,12 @@ ctxs=$(kubectl config view -o jsonpath='{.contexts[*].name}' | grep -v "docker-d
 for ctx in $ctxs
 do
 kubectl config use-context $ctx
-kubectl create namespace istio-system
+result=$(kubectl get ns | grep istio-system)
+if [ ! -z "$result" ]; then
+  echo "namespace istio-system exists!"
+else
+  kubectl create namespace istio-system
+fi
 kubectl create secret generic cacerts -n istio-system \
       --from-file=$ctx/ca-cert.pem \
       --from-file=$ctx/ca-key.pem \
@@ -30,7 +35,7 @@ spec:
 EOF
 istioctl install -f $ctx.yaml -y
 sleep 10
-kubectl apply -f ../addons/
+kubectl apply -f addons/
 sleep 10
-kubectl apply -f ../addons/
+kubectl apply -f addons/
 done
