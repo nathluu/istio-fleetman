@@ -21,12 +21,7 @@ kubectl create secret generic cacerts -n istio-system \
       --from-file=$ctx/root-cert.pem \
       --from-file=$ctx/cert-chain.pem
 
-istioctl install --skip-confirmation
-kubectl apply -f ../addons/
-sleep 10
-kubectl apply -f ../addons/
-
-# istioctl operator init
+istioctl operator init
 cat <<EOF > $ctx.yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
@@ -39,5 +34,9 @@ spec:
       network: network1
 EOF
 istioctl install -f $ctx.yaml
+# istioctl install --skip-confirmation
+kubectl apply -f ../addons/
+sleep 10
+kubectl apply -f ../addons/
 done
 popd
