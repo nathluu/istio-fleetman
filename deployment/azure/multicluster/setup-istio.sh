@@ -3,6 +3,7 @@ set -euxo pipefail
 pushd pluginCA
 bash generate.sh
 
+pushd certs
 ctxs=$(kubectl config view -o jsonpath='{.contexts[*].name}' | grep -v "docker-desktop" | sed 's/ /\n/g')
 for ctx in $ctxs
 do
@@ -13,6 +14,7 @@ kubectl create secret generic cacerts -n istio-system \
       --from-file=$ctx/ca-key.pem \
       --from-file=$ctx/root-cert.pem \
       --from-file=$ctx/cert-chain.pem
+popd
 popd
 istioctl operator init
 cat <<EOF > $ctx.yaml

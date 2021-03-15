@@ -2,9 +2,9 @@
 if [ -d certs ]; then
   echo "certs folder exists. Backing it up ..."
   mv certs certsbak
-else
-  mkdir -p certs
 fi
+
+mkdir -p certs
 
 cd certs
 make -f ../tools/certs/Makefile.selfsigned.mk root-ca
