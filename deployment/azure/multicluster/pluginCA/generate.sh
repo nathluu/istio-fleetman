@@ -26,7 +26,7 @@ kubectl apply -f ../addons/
 sleep 10
 kubectl apply -f ../addons/
 
-istioctl operator init
+# istioctl operator init
 cat <<EOF > $ctx.yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
@@ -38,6 +38,6 @@ spec:
         clusterName: $ctx
       network: network1
 EOF
-kubectl apply -f $ctx.yaml
+istioctl install -f $ctx.yaml
 done
 popd
