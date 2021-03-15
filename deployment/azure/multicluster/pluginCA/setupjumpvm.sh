@@ -11,7 +11,7 @@ if [ -x "$(which istioctl)" ]; then
   echo "istioctl is already installed!"
 else
   curl -sL https://istio.io/downloadIstioctl | sh -
-  export PATH=$PATH:$HOME/.istioctl/bin
+  echo "PATH=\$PATH:\$HOME/.istioctl/bin" | tee -a $HOME/.bashrc
 fi
 
 if [ -x "$(which kubectl)" ]; then
