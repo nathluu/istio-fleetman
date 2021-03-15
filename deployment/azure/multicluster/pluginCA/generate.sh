@@ -6,10 +6,12 @@ else
 fi
 
 cd certs
-make -f ../tools/certs/Makefile.selfsigned.mk root-ca
+if [[ ! -f root-cert.pem ]];then
+  make -f ../tools/certs/Makefile.selfsigned.mk root-ca
+fi
 
 ctxs=$(kubectl config view -o jsonpath='{.contexts[*].name}' | grep -v "docker-desktop" | sed 's/ /\n/g')
 for ctx in $ctxs
 do
-make -f ../tools/certs/Makefile.selfsigned.mk "$ctx-cacerts"
+  make -f ../tools/certs/Makefile.selfsigned.mk "$ctx-cacerts"
 done

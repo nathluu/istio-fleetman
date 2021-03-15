@@ -1,26 +1,16 @@
 #!/bin/bash
-#set -euxo pipefail
-pushd pluginCA
-bash generate.sh
+set -euxo pipefail
 
-pushd certs
 ctxs=$(kubectl config view -o jsonpath='{.contexts[*].name}' | grep -v "docker-desktop" | sed 's/ /\n/g')
 for ctx in $ctxs
 do
 kubectl config use-context $ctx
-result=$(kubectl get ns | grep istio-system)
-if [ ! -z "$result" ]; then
-  echo "namespace istio-system exists!"
-else
-  kubectl create namespace istio-system
-fi
+kubectl create namespace istio-system
 kubectl create secret generic cacerts -n istio-system \
-      --from-file=$ctx/ca-cert.pem \
-      --from-file=$ctx/ca-key.pem \
-      --from-file=$ctx/root-cert.pem \
-      --from-file=$ctx/cert-chain.pem
-popd
-popd
+      --from-file=pluginCA/certs/$ctx/ca-cert.pem \
+      --from-file=pluginCA/certs/$ctx/ca-key.pem \
+      --from-file=pluginCA/certs/$ctx/root-cert.pem \
+      --from-file=pluginCA/certs/$ctx/cert-chain.pem
 istioctl operator init
 cat <<EOF > $ctx.yaml
 apiVersion: install.istio.io/v1alpha1
