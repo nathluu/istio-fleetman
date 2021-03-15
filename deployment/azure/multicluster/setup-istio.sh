@@ -11,6 +11,12 @@ kubectl create secret generic cacerts -n istio-system \
       --from-file=pluginCA/certs/$ctx/ca-key.pem \
       --from-file=pluginCA/certs/$ctx/root-cert.pem \
       --from-file=pluginCA/certs/$ctx/cert-chain.pem
+
+istioctl install -y
+kubectl apply -f addons/
+sleep 3
+kubectl apply -f addons/
+
 istioctl operator init
 cat <<EOF > $ctx.yaml
 apiVersion: install.istio.io/v1alpha1
@@ -24,7 +30,5 @@ spec:
       network: network1
 EOF
 istioctl install -f $ctx.yaml -y
-kubectl apply -f addons/
-sleep 5
-kubectl apply -f addons/
+
 done
