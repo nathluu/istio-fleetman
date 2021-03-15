@@ -1,6 +1,23 @@
+pushd .
+cd /tmp
 sudo apt install make -y
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-curl -sL https://istio.io/downloadIstioctl | sh -
-curl -LO https://dl.k8s.io/release/v1.19.7/bin/linux/amd64/kubectl
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-export PATH=$PATH:$HOME/.istioctl/bin
+if [ -x "$(which az)" ]; then
+  echo "az is already installed!"
+else
+  curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+fi
+
+if [ -x "$(which istioctl)" ]; then
+  echo "istioctl is already installed!"
+else
+  curl -sL https://istio.io/downloadIstioctl | sh -
+  export PATH=$PATH:$HOME/.istioctl/bin
+fi
+
+if [ -x "$(which kubectl)" ]; then
+  echo "kubectl is already installed!"
+else
+  curl -LO https://dl.k8s.io/release/v1.19.7/bin/linux/amd64/kubectl
+  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+fi
+popd
