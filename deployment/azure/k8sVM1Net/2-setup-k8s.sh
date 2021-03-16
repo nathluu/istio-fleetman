@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
-VM_APP="position-simulator"
-VM_NAMESPACE="vmsample"
+VM_APP="staff-service"
+VM_NAMESPACE="default"
 WORK_DIR="istio-fleetman-deployment"
-SERVICE_ACCOUNT="position-simulator"
+SERVICE_ACCOUNT="staff-service"
 CLUSTER_NETWORK=""
 VM_NETWORK=""
 CLUSTER="Kubernetes"
@@ -32,7 +32,9 @@ istioctl install -f vm-cluster.yaml
 sh samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
 #Configure the VM namespace
-kubectl create namespace "${VM_NAMESPACE}"
+if [[ "$VM_NAMESPACE" != "default" ]]; then
+  kubectl create namespace "${VM_NAMESPACE}"
+fi
 kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${VM_NAMESPACE}"
 
 cat <<EOF > workloadgroup.yaml
@@ -51,8 +53,6 @@ spec:
 EOF
 
 istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}"
-
-istioctl register -n vm mysqldb 1.2.3.4 3306
 
 ssh-keygen -b 4096 -f my_id_rsa
 echo "Please add my_id_rsa.pub to your VM and proceed next step!"
