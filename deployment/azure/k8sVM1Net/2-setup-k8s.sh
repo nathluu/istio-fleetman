@@ -52,5 +52,7 @@ EOF
 
 istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}"
 
+istioctl register -n vm mysqldb 1.2.3.4 3306
+
 ssh-keygen -b 4096 -f my_id_rsa
 echo "Please add my_id_rsa.pub to your VM and proceed next step!"

@@ -1,0 +1,1 @@
+kubectl apply -f position-simulator-svc.yaml -n vm
