@@ -1,3 +1,4 @@
+echo "Installing AKS tools..."
 pushd .
 cd /tmp
 sudo apt install make -y
@@ -11,7 +12,6 @@ if [[ -x "$(which istioctl)" ]]; then
   echo "istioctl is already installed!"
 else
   curl -sL https://istio.io/downloadIstioctl | sh -
-  #echo "PATH=\$PATH:\$HOME/.istioctl/bin" | tee -a $HOME/.bashrc
   sudo install -o root -g root -m 0755 $HOME/.istioctl/bin/istioctl /usr/local/bin/istioctl
 fi
 
