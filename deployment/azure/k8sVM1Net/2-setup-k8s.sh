@@ -1,13 +1,15 @@
 #!/usr/bin/env sh
 VM_APP="staff-service"
-VM_NAMESPACE="default"
-WORK_DIR="istio-fleetman-deployment"
+VM_NAMESPACE="vm"
+WORK_DIR="Deployment"
 SERVICE_ACCOUNT="staff-service"
 CLUSTER_NETWORK=""
 VM_NETWORK=""
 CLUSTER="Kubernetes"
 
 mkdir -p "${WORK_DIR}"
+
+istioctl operator init
 
 istioctl install -y
 kubectl apply -f addons/
@@ -29,6 +31,7 @@ spec:
 EOF
 
 istioctl install -f vm-cluster.yaml -y
+
 sh samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
 #Configure the VM namespace
@@ -53,6 +56,3 @@ spec:
 EOF
 
 istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}"
-
-ssh-keygen -b 4096 -f my_id_rsa
-echo "Please add my_id_rsa.pub to your VM and proceed next step!"
