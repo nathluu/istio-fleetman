@@ -28,7 +28,7 @@ spec:
       network: "${CLUSTER_NETWORK}"
 EOF
 
-istioctl install -f vm-cluster.yaml
+istioctl install -f vm-cluster.yaml -y
 sh samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
 #Configure the VM namespace
