@@ -11,6 +11,7 @@ pushd .
 cd /tmp
 curl -L https://storage.googleapis.com/istio-release/releases/1.9.1/deb/istio-sidecar.deb -o /tmp/istio-sidecar.deb
 sudo dpkg -i /tmp/istio-sidecar.deb
+popd
 
 sudo cp $HOME/$WORK_DIR/cluster.env /var/lib/istio/envoy/cluster.env
 sudo cp $HOME/$WORK_DIR/mesh.yaml /etc/istio/config/mesh
