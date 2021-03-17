@@ -7,11 +7,8 @@ sudo cp $HOME/$WORK_DIR/root-cert.pem /etc/certs/root-cert.pem
 sudo  mkdir -p /var/run/secrets/tokens
 sudo cp $HOME/$WORK_DIR/istio-token /var/run/secrets/tokens/istio-token
 
-pushd .
-cd /tmp
 curl -L https://storage.googleapis.com/istio-release/releases/1.9.1/deb/istio-sidecar.deb -o /tmp/istio-sidecar.deb
 sudo dpkg -i /tmp/istio-sidecar.deb
-popd
 
 sudo cp $HOME/$WORK_DIR/cluster.env /var/lib/istio/envoy/cluster.env
 sudo cp $HOME/$WORK_DIR/mesh.yaml /etc/istio/config/mesh
