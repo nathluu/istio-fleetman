@@ -14,7 +14,7 @@ sudo dpkg -i /tmp/istio-sidecar.deb
 
 sudo cp $HOME/$WORK_DIR/cluster.env /var/lib/istio/envoy/cluster.env
 sudo cp $HOME/$WORK_DIR/mesh.yaml /etc/istio/config/mesh
-cat $HOME/$WORK_DIR/hosts | tee -a /etc/hosts
+cat $HOME/$WORK_DIR/hosts | sudo tee -a /etc/hosts
 
 sudo mkdir -p /etc/istio/proxy
 sudo chown -R istio-proxy /var/lib/istio /etc/certs /etc/istio/proxy /etc/istio/config /var/run/secrets /etc/certs/root-cert.pem
