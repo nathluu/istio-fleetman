@@ -12,12 +12,13 @@ kubectl create secret generic cacerts -n istio-system \
       --from-file=pluginCA/certs/$ctx/root-cert.pem \
       --from-file=pluginCA/certs/$ctx/cert-chain.pem
 
+istioctl operator init
 istioctl install -y
 kubectl apply -f addons/
 sleep 3
 kubectl apply -f addons/
 
-istioctl operator init
+# istioctl operator init
 cat <<EOF > $ctx.yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
