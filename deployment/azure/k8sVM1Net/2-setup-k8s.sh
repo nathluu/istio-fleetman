@@ -11,10 +11,10 @@ mkdir -p "${WORK_DIR}"
 
 istioctl operator init
 
-istioctl install -y
-kubectl apply -f addons/
-sleep 3
-kubectl apply -f addons/
+# istioctl install -y
+# kubectl apply -f addons/
+# sleep 3
+# kubectl apply -f addons/
 
 cat <<EOF > vm-cluster.yaml
 apiVersion: install.istio.io/v1alpha1
@@ -30,6 +30,10 @@ spec:
       network: "${CLUSTER_NETWORK}"
 EOF
 istioctl install -y -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true
+
+kubectl apply -f addons/
+sleep 3
+kubectl apply -f addons/
 
 bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
