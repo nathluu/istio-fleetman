@@ -54,7 +54,9 @@ EOF
 
 kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
 
-#INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-#echo "Eastwest gateway IP: $INGRESSIP"
+sleep 5
 
-#istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
+INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "Eastwest gateway IP: $INGRESSIP"
+
+istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
