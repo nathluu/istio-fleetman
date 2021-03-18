@@ -2,7 +2,7 @@
 VM_APP="staff-service"
 VM_NAMESPACE="vm"
 WORK_DIR="Deployment"
-SERVICE_ACCOUNT="default"
+SERVICE_ACCOUNT="staff-service"
 CLUSTER_NETWORK=""
 VM_NETWORK=""
 CLUSTER="Kubernetes"
@@ -52,6 +52,9 @@ spec:
     network: "${VM_NETWORK}"
 EOF
 
-INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo "Eastwest gateway IP: $INGRESSIP"
-istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
+kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
+
+#INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+#echo "Eastwest gateway IP: $INGRESSIP"
+
+#istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
