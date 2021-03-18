@@ -5,7 +5,7 @@ WORK_DIR="Deployment"
 SERVICE_ACCOUNT="staff-service"
 CLUSTER_NETWORK=""
 VM_NETWORK=""
-CLUSTER="Kubernetes"
+CLUSTER="cluster01" #Your AKS cluster name
 
 mkdir -p "${WORK_DIR}"
 
@@ -16,7 +16,7 @@ kubectl apply -f addons/
 sleep 3
 kubectl apply -f addons/
 
-cat <<EOF > ./vm-cluster.yaml
+cat <<EOF > vm-cluster.yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 metadata:
@@ -29,7 +29,7 @@ spec:
         clusterName: "${CLUSTER}"
       network: "${CLUSTER_NETWORK}"
 EOF
-istioctl install -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true -y
+istioctl install -y -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true
 
 bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
