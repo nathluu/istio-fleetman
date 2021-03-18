@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 VM_APP="staff-service"
-VM_NAMESPACE="default"
+VM_NAMESPACE="vm"
 WORK_DIR="Deployment"
-SERVICE_ACCOUNT="staff-service"
+SERVICE_ACCOUNT="default"
 CLUSTER_NETWORK=""
 VM_NETWORK=""
 CLUSTER="Kubernetes"
@@ -29,8 +29,7 @@ spec:
         clusterName: "${CLUSTER}"
       network: "${CLUSTER_NETWORK}"
 EOF
-
-istioctl install -f vm-cluster.yaml -y
+istioctl install -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true -y
 
 bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
@@ -55,4 +54,4 @@ EOF
 
 INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"
-istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP"
+istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
