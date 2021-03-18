@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 ISTIO_REVISION="1-9-1"
 VM_APP="staff-service"
 VM_NAMESPACE="vm"
@@ -33,7 +33,7 @@ EOF
 
 istioctl install -f vm-cluster.yaml -y
 
-sh samples/multicluster/gen-eastwest-gateway.sh --single-cluster --revision ${ISTIO_REVISION} | istioctl install -y -f -
+bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster --revision ${ISTIO_REVISION} | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
 #Configure the VM namespace
 if [[ "$VM_NAMESPACE" != "default" ]]; then
