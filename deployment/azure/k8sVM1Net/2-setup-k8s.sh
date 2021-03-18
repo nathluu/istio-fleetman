@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-VM_APP="staff-service"
+VM_APP="mysqldb"
 VM_NAMESPACE="vm"
 WORK_DIR="Deployment"
-SERVICE_ACCOUNT="staff-service"
+SERVICE_ACCOUNT="mysqldb"
 CLUSTER_NETWORK=""
 VM_NETWORK=""
 CLUSTER="Kubernetes"
