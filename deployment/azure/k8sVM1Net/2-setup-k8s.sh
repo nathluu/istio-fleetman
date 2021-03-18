@@ -35,9 +35,7 @@ istioctl install -f vm-cluster.yaml -y
 bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
 #Configure the VM namespace
-if [[ "$VM_NAMESPACE" != "default" ]]; then
-  kubectl create namespace "${VM_NAMESPACE}"
-fi
+kubectl create namespace "${VM_NAMESPACE}"
 kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${VM_NAMESPACE}"
 
 cat <<EOF > workloadgroup.yaml

@@ -1,14 +1,16 @@
-#!/usr/bin/env sh
-VM_APP="position-simulator"
-VM_NAMESPACE="default"
-export WORK_DIR="istio-fleetman-deployment"
-SERVICE_ACCOUNT="position-simulator"
+#!/usr/bin/env bash
+VM_APP="mysqldb"
+VM_NAMESPACE="vm"
+WORK_DIR="Deployment"
+SERVICE_ACCOUNT="mysqldb"
 # Customize values for multi-cluster/multi-network as needed
 CLUSTER_NETWORK="kube-network"
 VM_NETWORK="vm-network"
 CLUSTER="cluster1"
 
 mkdir -p "${WORK_DIR}"
+
+istioctl operator init
 
 istioctl install -y
 kubectl apply -f addons/
@@ -29,8 +31,8 @@ spec:
       network: "${CLUSTER_NETWORK}"
 EOF
 
-istioctl install -f vm-cluster.yaml
-sh samples/multicluster/gen-eastwest-gateway.sh \
+istioctl install -f vm-cluster.yaml -y
+bash samples/multicluster/gen-eastwest-gateway.sh \
 --mesh mesh1 --cluster "${CLUSTER}" --network "${CLUSTER_NETWORK}" --revision 1-9-1 | \
 istioctl install -y -f -
 
@@ -56,6 +58,3 @@ spec:
 EOF
 
 istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}"
-
-ssh-keygen -b 4096 -f my_id_rsa
-echo "Please add my_id_rsa.pub to your VM and proceed next step!"
