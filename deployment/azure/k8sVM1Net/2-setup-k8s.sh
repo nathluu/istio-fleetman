@@ -5,7 +5,7 @@ WORK_DIR="Deployment"
 SERVICE_ACCOUNT="staff-service"
 CLUSTER_NETWORK=""
 VM_NETWORK=""
-CLUSTER="cluster01" #Your AKS cluster name
+CLUSTER="Kubernetes" #This is fixed value
 
 mkdir -p "${WORK_DIR}"
 
@@ -32,7 +32,7 @@ EOF
 istioctl install -y -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true
 
 kubectl apply -f addons/
-sleep 3
+sleep 5
 kubectl apply -f addons/
 
 bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
