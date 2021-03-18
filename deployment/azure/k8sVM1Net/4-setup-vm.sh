@@ -1,5 +1,5 @@
-#!/usr/bin/env sh
-WORK_DIR="istio-fleetman-deployment"
+#!/usr/bin/env bash
+WORK_DIR="Deployment"
 
 sudo mkdir -p /etc/certs
 sudo cp $HOME/$WORK_DIR/root-cert.pem /etc/certs/root-cert.pem
