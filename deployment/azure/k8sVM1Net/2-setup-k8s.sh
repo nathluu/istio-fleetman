@@ -53,6 +53,6 @@ spec:
     network: "${VM_NETWORK}"
 EOF
 
-INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system --jsonpath='{.status.loadBalancer.ingress.ip}')
+INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"
 istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP"
