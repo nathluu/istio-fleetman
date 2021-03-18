@@ -53,4 +53,4 @@ spec:
     network: "${VM_NETWORK}"
 EOF
 
-istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}"
+istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "a.b.c.d"
