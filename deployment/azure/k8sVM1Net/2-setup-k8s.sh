@@ -2,7 +2,7 @@
 VM_APP="staff-service"
 VM_NAMESPACE="vm"
 WORK_DIR="Deployment"
-SERVICE_ACCOUNT="staff-service"
+SERVICE_ACCOUNT="staff-service" # Empty means default service account
 CLUSTER_NETWORK=""
 VM_NETWORK=""
 CLUSTER="Kubernetes" #This is a fixed value
@@ -52,7 +52,7 @@ spec:
     network: "${VM_NETWORK}"
 EOF
 
-kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
+kubectl apply -f workloadgroup.yaml
 
 INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"

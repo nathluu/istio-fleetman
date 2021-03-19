@@ -13,16 +13,20 @@ kubectl create secret generic cacerts -n istio-system \
       --from-file=pluginCA/certs/$ctx/cert-chain.pem
 
 istioctl operator init
-istioctl install -y
-kubectl apply -f addons/
-sleep 3
-kubectl apply -f addons/
+# istioctl install -y
+# kubectl apply -f addons/
+# sleep 3
+# kubectl apply -f addons/
 
 # istioctl operator init
 cat <<EOF > $ctx.yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
+metadata:
+  name: istio
+  namespace: istio-system
 spec:
+  profile: default
   values:
     global:
       meshID: mesh1
@@ -30,6 +34,11 @@ spec:
         clusterName: $ctx
       network: network1
 EOF
-istioctl install -f $ctx.yaml -y
 
+kubectl create ns istio-system
+istioctl install -f $ctx.yaml -y
+kubectl apply -f addons/
+if [[ $? -ne 0 ]]; then
+  kubectl apply -f addons/
+fi
 done
