@@ -35,7 +35,6 @@ spec:
       network: network1
 EOF
 
-kubectl create ns istio-system
 istioctl install -f $ctx.yaml -y
 kubectl apply -f addons/
 if [[ $? -ne 0 ]]; then
