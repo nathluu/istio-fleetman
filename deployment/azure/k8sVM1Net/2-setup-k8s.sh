@@ -5,16 +5,11 @@ WORK_DIR="Deployment"
 SERVICE_ACCOUNT="staff-service"
 CLUSTER_NETWORK=""
 VM_NETWORK=""
-CLUSTER="Kubernetes" #This is fixed value
+CLUSTER="Kubernetes" #This is a fixed value
 
 mkdir -p "${WORK_DIR}"
 
 istioctl operator init
-
-# istioctl install -y
-# kubectl apply -f addons/
-# sleep 3
-# kubectl apply -f addons/
 
 cat <<EOF > vm-cluster.yaml
 apiVersion: install.istio.io/v1alpha1
@@ -32,8 +27,9 @@ EOF
 istioctl install -y -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true
 
 kubectl apply -f addons/
-sleep 5
-kubectl apply -f addons/
+if [[ $? -ne 0 ]]; then
+  kubectl apply -f addons/
+fi
 
 bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
@@ -57,8 +53,6 @@ spec:
 EOF
 
 kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
-
-sleep 5
 
 INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"
