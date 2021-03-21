@@ -6,18 +6,13 @@ SERVICE_ACCOUNT="mysqldb"
 # Customize values for multi-cluster/multi-network as needed
 CLUSTER_NETWORK="kube-network"
 VM_NETWORK="vm-network"
-CLUSTER="cluster1"
+CLUSTER="mycluster1"
 
 mkdir -p "${WORK_DIR}"
 
 istioctl operator init
 
-istioctl install -y
-kubectl apply -f addons/
-sleep 3
-kubectl apply -f addons/
-
-cat <<EOF > ./vm-cluster.yaml
+cat <<EOF > vm-cluster.yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 metadata:
@@ -31,9 +26,15 @@ spec:
       network: "${CLUSTER_NETWORK}"
 EOF
 
-istioctl install -f vm-cluster.yaml -y
+istioctl install -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true -y
+
+kubectl apply -f addons/
+if [[ $? -ne 0 ]]; then
+  kubectl apply -f addons/
+fi
+
 bash samples/multicluster/gen-eastwest-gateway.sh \
---mesh mesh1 --cluster "${CLUSTER}" --network "${CLUSTER_NETWORK}" --revision 1-9-1 | \
+--mesh mesh1 --cluster "${CLUSTER}" --network "${CLUSTER_NETWORK}" | \
 istioctl install -y -f -
 
 kubectl apply -f samples/multicluster/expose-istiod.yaml
@@ -57,4 +58,9 @@ spec:
     network: "${VM_NETWORK}"
 EOF
 
-istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}"
+kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
+
+INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "Eastwest gateway IP: $INGRESSIP"
+
+istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
