@@ -48,12 +48,13 @@ sleep 10
 echo "Waiting eastwest gateway to be ready"
 #Expose services
 kubectl apply -n istio-system -f samples/multicluster/expose-services.yaml
+done
 
+for ctx in $ctxs; do
 #Enable Endpoint Discovery
 REMOTES=$(kubectl config view -o jsonpath='{.contexts[*].name}' | sed 's/ /\n/g' | grep -v "docker-desktop" | grep -v ${ctx})
 istioctl x create-remote-secret --context="${ctx}" --name=${ctx} > ${ctx}-remote-secret.yaml
 for REMOTE in $REMOTES; do
   kubectl apply -f ${ctx}-remote-secret.yaml --context="${REMOTE}"
 done
-
 done
