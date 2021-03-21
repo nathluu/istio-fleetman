@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 VM_APP="mysqldb"
-VM_NAMESPACE="vm"
+VM_NAMESPACE="bookinfo"
 WORK_DIR="Deployment"
 SERVICE_ACCOUNT="mysqldb"
 # Customize values for multi-cluster/multi-network as needed
