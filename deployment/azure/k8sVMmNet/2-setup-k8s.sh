@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -euxo pipefail
+
 VM_APP="mysqldb"
 VM_NAMESPACE="bookinfo"
 WORK_DIR="Deployment"
@@ -28,9 +30,8 @@ EOF
 
 istioctl install -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true -y
 
-kubectl apply -f addons/
-if [[ $? -ne 0 ]]; then
-  kubectl apply -f addons/
+if ! kubectl apply -f addons/; then
+  sleep 5 && kubectl apply -f addons/
 fi
 
 bash samples/multicluster/gen-eastwest-gateway.sh \
@@ -60,7 +61,13 @@ EOF
 
 kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
 
+IDX=1
+while [ -z INGRESSIP || $IDX > 10 ]; do
 INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"
+sleep 10
+echo "Checking ........"
+let IDX=${IDX}+1
+done
 
 istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
