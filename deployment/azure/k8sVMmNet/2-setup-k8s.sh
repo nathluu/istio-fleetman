@@ -41,8 +41,10 @@ istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
 kubectl apply -n istio-system -f samples/multicluster/expose-services.yaml
 #Configure the VM namespace
-kubectl create namespace "${VM_NAMESPACE}"
-kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${VM_NAMESPACE}"
+if ! kubectl get namespace "${VM_NAMESPACE}"; then
+  kubectl create namespace "${VM_NAMESPACE}"
+  kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${VM_NAMESPACE}"
+fi
 
 cat <<EOF > workloadgroup.yaml
 apiVersion: networking.istio.io/v1alpha3
