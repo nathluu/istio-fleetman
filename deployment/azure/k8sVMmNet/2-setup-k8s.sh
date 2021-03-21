@@ -64,7 +64,7 @@ EOF
 kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
 
 IDX=1
-while [ -z $INGRESSIP || $IDX > 10 ]; do
+while [[ -z "$INGRESSIP" && $IDX -lt 10 ]]; do
 INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"
 sleep 10
