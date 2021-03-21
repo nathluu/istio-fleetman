@@ -54,6 +54,9 @@ EOF
 
 kubectl apply -f workloadgroup.yaml
 
+sleep 10
+echo "Waiting eastwest gateway to be ready"
+
 INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"
 
