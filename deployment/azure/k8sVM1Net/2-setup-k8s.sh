@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euxo pipefail
 VM_APP="staff-service"
 VM_NAMESPACE="vm"
 WORK_DIR="Deployment"
@@ -24,18 +25,20 @@ spec:
         clusterName: "${CLUSTER}"
       network: "${CLUSTER_NETWORK}"
 EOF
-istioctl install -y -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true
 
-kubectl apply -f addons/
-if [[ $? -ne 0 ]]; then
-  kubectl apply -f addons/
+istioctl install -f vm-cluster.yaml --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION=true --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_HEALTHCHECKS=true -y
+
+if ! kubectl apply -f addons/; then
+  sleep 5 && kubectl apply -f addons/
 fi
 
 bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
 kubectl apply -f samples/multicluster/expose-istiod.yaml
 #Configure the VM namespace
+if ! kubectl get namespace "${VM_NAMESPACE}"; then
 kubectl create namespace "${VM_NAMESPACE}"
 kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${VM_NAMESPACE}"
+fi
 
 cat <<EOF > workloadgroup.yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -52,12 +55,16 @@ spec:
     network: "${VM_NETWORK}"
 EOF
 
-kubectl apply -f workloadgroup.yaml
+kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
 
-sleep 10
-echo "Waiting eastwest gateway to be ready"
-
+IDX=1
+INGRESSIP=""
+while [[ -z "$INGRESSIP" && $IDX -lt 10 ]]; do
 INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"
+sleep 10
+echo "Checking ........"
+let IDX=${IDX}+1
+done
 
 istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
