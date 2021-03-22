@@ -22,23 +22,16 @@ public class StaffManagementController {
 	private ExternalDriverMonitoringSystem externalDriverMonitoringSystem;
 
 	@RequestMapping(method=RequestMethod.GET, value="/driver/{vehicleName}", produces="application/json")
-	public ResponseEntity<StaffRecord> getDriverAssignedTo(@PathVariable String vehicleName)
+	public StaffRecord getDriverAssignedTo(@PathVariable String vehicleName)
 	{
-		try {
-			return new ResponseEntity<StaffRecord>(staffService.getDriverDetailsFor(vehicleName), HttpStatus.OK);
-		}
-		catch (Exception e)
-		{
-			return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-		}
+		return staffService.getDriverDetailsFor(vehicleName);
 	}
 	
 	// See case #22 for details of this odd design...
 	@RequestMapping(method=RequestMethod.POST, value="/driver/{vehicleName}/{speed}")
 	public void updateSpeedLogFor(@PathVariable String vehicleName, @PathVariable String speed)
 	{
-		StaffRecord driverDetails = this.getDriverAssignedTo(vehicleName).getBody();
+		StaffRecord driverDetails = this.getDriverAssignedTo(vehicleName);
 		externalDriverMonitoringSystem.updateSpeedLogFor(driverDetails.getName(), speed);
 	}
-	
 }
