@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
       - name: position-tracker
-        image: nathluu/istio-fleetman-position-tracker:6
+        image: nathluu/istio-fleetman-position-tracker:vm
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
@@ -60,7 +60,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: nathluu/istio-fleetman-api-gateway:6
+        image: nathluu/istio-fleetman-api-gateway:vm
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
