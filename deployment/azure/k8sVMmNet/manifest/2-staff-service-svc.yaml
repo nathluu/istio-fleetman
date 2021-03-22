@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-staff-service
+  namespace: vm
+  labels:
+    app: staff-service
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: staff-service

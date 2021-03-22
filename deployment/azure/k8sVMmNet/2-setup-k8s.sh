@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-VM_APP="mysqldb"
-VM_NAMESPACE="bookinfo"
+VM_APP="staff-service"
+VM_NAMESPACE="vm"
 WORK_DIR="Deployment"
-SERVICE_ACCOUNT="mysqldb"
+SERVICE_ACCOUNT="staff-service" # Empty means default service account
 # Customize values for multi-cluster/multi-network as needed
 CLUSTER_NETWORK="kube-network"
 VM_NETWORK="vm-network"

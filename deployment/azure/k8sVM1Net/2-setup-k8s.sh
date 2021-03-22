@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euxo pipefail
+
 VM_APP="staff-service"
 VM_NAMESPACE="vm"
 WORK_DIR="Deployment"
@@ -36,8 +37,8 @@ bash samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl in
 kubectl apply -f samples/multicluster/expose-istiod.yaml
 #Configure the VM namespace
 if ! kubectl get namespace "${VM_NAMESPACE}"; then
-kubectl create namespace "${VM_NAMESPACE}"
-kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${VM_NAMESPACE}"
+  kubectl create namespace "${VM_NAMESPACE}"
+  kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${VM_NAMESPACE}"
 fi
 
 cat <<EOF > workloadgroup.yaml
