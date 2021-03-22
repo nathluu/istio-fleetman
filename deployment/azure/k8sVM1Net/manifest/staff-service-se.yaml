@@ -1,7 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: ServiceEntry
 metadata:
-  name: staff-service-svc
+  name: staff-service
+  namespace: vm
 spec:
   hosts:
   - staff-service
