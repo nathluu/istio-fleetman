@@ -8,7 +8,7 @@ SERVICE_ACCOUNT="staff-service" # Empty means default service account
 # Customize values for multi-cluster/multi-network as needed
 CLUSTER_NETWORK="kube-network"
 VM_NETWORK="vm-network"
-CLUSTER="mycluster1"
+CLUSTER="Kubernetes"
 
 mkdir -p "${WORK_DIR}"
 
