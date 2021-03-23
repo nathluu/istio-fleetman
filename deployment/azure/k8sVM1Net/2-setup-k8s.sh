@@ -69,3 +69,5 @@ let IDX=${IDX}+1
 done
 
 istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --clusterID "${CLUSTER}" --ingressIP "$INGRESSIP" --autoregister
+kubectl label namespace default istio-injection=enabled
+kubectl label namespace vm istio-injection=enabled
