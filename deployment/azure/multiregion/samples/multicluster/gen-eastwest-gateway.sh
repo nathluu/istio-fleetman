@@ -127,6 +127,14 @@ $IOP
                 targetPort: 15017
 EOF
 )
+#AKS Internal LoadBalancer
+IOP=$(cat <<EOF
+$IOP
+          serviceAnnotations:
+            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+            service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "gateway-subnet"
+EOF
+)
 
 # additional multicluster/multinetwork meta
 if [[ "${SINGLE_CLUSTER}" -eq 0 ]]; then
