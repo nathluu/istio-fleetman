@@ -1,0 +1,1 @@
+This module is used to install istio multicluster primary-remote model. The topology includes two clusters cluster1 and cluster2 belong to the same network. We will install the control plane on cluster1 and create an east-west gateway to expose control plane to cluster2.

@@ -11,7 +11,6 @@ fi
 if [[ -x "$(which istioctl)" ]]; then
   echo "istioctl is already installed!"
 else
-#   curl -sL https://istio.io/downloadIstioctl | sh -
   curl -sL "https://github.com/istio/istio/releases/download/$ISTIO_VERSION/istioctl-$ISTIO_VERSION-linux-amd64.tar.gz" | tar xz
   sudo install -o root -g root -m 0755 istioctl /usr/local/bin/istioctl
 fi
