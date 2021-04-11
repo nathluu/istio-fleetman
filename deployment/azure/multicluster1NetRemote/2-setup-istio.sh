@@ -32,10 +32,8 @@ spec:
 EOF
 
 istioctl install -f cluster1.yaml -y
-kubectl apply -f addons/
-if [[ $? -ne 0 ]]; then
-  sleep 5
-  kubectl apply -f addons/
+if ! kubectl apply -f addons/; then
+  sleep 5 && kubectl apply -f addons/
 fi
 
 #Install eastwest gateway on cluster1
