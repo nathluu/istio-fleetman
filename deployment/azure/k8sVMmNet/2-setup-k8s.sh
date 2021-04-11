@@ -8,7 +8,7 @@ SERVICE_ACCOUNT="staff-service" # Empty means default service account
 # Customize values for multi-cluster/multi-network as needed
 CLUSTER_NETWORK="kube-network"
 VM_NETWORK="vm-network"
-CLUSTER="Kubernetes"
+CLUSTER="cluster1"
 
 mkdir -p "${WORK_DIR}"
 
@@ -61,15 +61,15 @@ spec:
     network: "${VM_NETWORK}"
 EOF
 
-kubectl --namespace "${VM_NAMESPACE}" apply -f workloadgroup.yaml
+kubectl apply --namespace "${VM_NAMESPACE}" -f workloadgroup.yaml
 
 IDX=1
 INGRESSIP=""
 while [[ -z "$INGRESSIP" && $IDX -lt 10 ]]; do
+echo "Checking ........"
+sleep 10
 INGRESSIP=$(kubectl get svc/istio-eastwestgateway -n istio-system  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Eastwest gateway IP: $INGRESSIP"
-sleep 10
-echo "Checking ........"
 let IDX=${IDX}+1
 done
 
