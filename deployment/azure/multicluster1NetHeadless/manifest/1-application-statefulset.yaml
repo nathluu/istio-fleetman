@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: staff-service
+spec:
+  selector:
+    matchLabels:
+      app: staff-service
+  serviceName: fleetman-staff-service
+  replicas: 2
+  template: # template for the pods
+    metadata:
+      labels:
+        app: staff-service
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: staff-service
+        image: nathluu/istio-fleetman-staff-service:8
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
