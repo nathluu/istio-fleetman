@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: netutils
+  namespace: default
+spec:
+  containers:
+  - name: netutils
+    image: gcr.io/kubernetes-e2e-test-images/net-amd64@sha256:c4c189c0aec69a73c60705c9401c845a60feaaed1916d9614a312bf589a34379
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
