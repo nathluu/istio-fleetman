@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: fleetman-ingress-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: http
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: fleetman-webapp
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - fleetman-ingress-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 80
+        host: fleetman-webapp
