@@ -37,12 +37,58 @@ spec:
     spec:
       containers:
       - name: position-tracker
-        image: nathluu/istio-fleetman-position-tracker:vm
+        image: nathluu/istio-fleetman-position-tracker:6
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
         command: ["java","-Xmx50m","-jar","webapp.jar"]
         imagePullPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-telemetry
+spec:
+  selector:
+    matchLabels:
+      app: vehicle-telemetry
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: vehicle-telemetry
+    spec:
+      containers:
+      - name: vehicle-telemtry
+        image: nathluu/istio-fleetman-vehicle-telemetry:6
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+        imagePullPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: staff-service
+spec:
+  selector:
+    matchLabels:
+      app: staff-service
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: staff-service
+    spec:
+      containers:
+      - name: staff-service
+        image: nathluu/istio-fleetman-staff-service:8
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -60,7 +106,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: nathluu/istio-fleetman-api-gateway:vm
+        image: nathluu/istio-fleetman-api-gateway:6
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
@@ -89,43 +135,6 @@ spec:
           value: production-microservice
         imagePullPolicy: Always
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: vehicle-telemetry
-spec:
-  selector:
-    matchLabels:
-      app: vehicle-telemetry
-  replicas: 1
-  template: # template for the pods
-    metadata:
-      labels:
-        app: vehicle-telemetry
-    spec:
-      containers:
-      - name: vehicle-telemtry
-        image: nathluu/istio-fleetman-vehicle-telemetry:6
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: production-microservice
-        imagePullPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fleetman-webapp
-spec:
-  # This defines which pods are going to be represented by this Service
-  # The service becomes a network endpoint for either other services
-  # or maybe external users to connect to (eg browser)
-  selector:
-    app: webapp
-  ports:
-    - name: http
-      port: 80
-  type: ClusterIP
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -137,18 +146,6 @@ spec:
   # or maybe external users to connect to (eg browser)
   selector:
     app: position-tracker
-  ports:
-    - name: http
-      port: 8080
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fleetman-api-gateway
-spec:
-  selector:
-    app: api-gateway
   ports:
     - name: http
       port: 8080
@@ -170,12 +167,37 @@ apiVersion: v1
 kind: Service
 metadata:
   name: fleetman-staff-service
-  labels:
-    app: staff-service
 spec:
   selector:
     app: staff-service
   ports:
-  - port: 8080
-    name: http
+    - name: http
+      port: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-api-gateway
+spec:
+  selector:
+    app: api-gateway
+  ports:
+    - name: http
+      port: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-webapp
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: webapp
+  ports:
+    - name: http
+      port: 80
   type: ClusterIP
