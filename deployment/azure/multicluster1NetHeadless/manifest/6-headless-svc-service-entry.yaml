@@ -4,7 +4,8 @@ metadata:
   name: fleetman-staff-service-se
 spec:
   hosts:
-  - "10-1-4-102.fleetman-staff-service.default.svc.cluster.local"
+  - "staff-service-0.fleetman-staff-service.default.svc.cluster.local"
+  - "staff-service-1.fleetman-staff-service.default.svc.cluster.local"
   location: MESH_INTERNAL
   ports:
   - number: 8080
