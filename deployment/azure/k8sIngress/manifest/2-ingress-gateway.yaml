@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: istio
+  name: k8s-ingress
+spec:
+  defaultBackend:
+    service:
+      name: fleetman-webapp
+      port:
+        number: 80
