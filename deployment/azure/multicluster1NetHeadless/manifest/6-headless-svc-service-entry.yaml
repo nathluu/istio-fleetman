@@ -1,14 +1,30 @@
-apiVersion: networking.istio.io/v1alpha3
+# apiVersion: networking.istio.io/v1alpha3
+# kind: ServiceEntry
+# metadata:
+#   name: fleetman-staff-service-se
+# spec:
+#   hosts:
+#   - "staff-service-0.fleetman-staff-service.default.svc.cluster.local"
+#   - "staff-service-1.fleetman-staff-service.default.svc.cluster.local"
+#   location: MESH_INTERNAL
+#   ports:
+#   - number: 8080
+#     name: http
+#     protocol: HTTP
+#   resolution: DNS
+---
+apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: fleetman-staff-service-se
 spec:
   hosts:
-  - "staff-service-0.fleetman-staff-service.default.svc.cluster.local"
-  - "staff-service-1.fleetman-staff-service.default.svc.cluster.local"
+  - fleetman-staff-service.default.svc.cluster.local
   location: MESH_INTERNAL
   ports:
-  - number: 8080
-    name: http
+  - name: http
+    number: 8080
     protocol: HTTP
-  resolution: DNS
+  resolution: STATIC
+  endpoints:
+  - address: 10.1.4.7
