@@ -28,6 +28,13 @@ spec:
       multiCluster:
         clusterName: $ctx
       network: network1
+  meshConfig:
+    defaultConfig:
+      proxyMetadata:
+        # Enable basic DNS proxying
+        ISTIO_META_DNS_CAPTURE: "true"
+        # Enable automatic address allocation, optional
+        ISTIO_META_DNS_AUTO_ALLOCATE: "true"
 EOF
 
 istioctl install -f $ctx.yaml -y --set values.pilot.env.PILOT_ENABLE_EDS_FOR_HEADLESS_SERVICES=true
