@@ -28,6 +28,7 @@ spec:
       k8s:
         serviceAnnotations:
           service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+          service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "default"
 EOF
 
 istioctl install -f vm-cluster.yaml -y
@@ -36,4 +37,5 @@ if ! kubectl apply -f addons/; then
   sleep 5 && kubectl apply -f addons/
 fi
 
-# kubectl label namespace default istio-injection=enabled
+kubectl create ns test
+kubectl label namespace test istio-injection=enabled
