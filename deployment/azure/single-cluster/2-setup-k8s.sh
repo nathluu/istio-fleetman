@@ -4,7 +4,7 @@ set -euxo pipefail
 CLUSTER_NETWORK=""
 CLUSTER="Kubernetes" #This is a fixed value
 
-# istioctl operator init
+istioctl operator init
 
 cat <<EOF > vm-cluster.yaml
 apiVersion: install.istio.io/v1alpha1
@@ -18,6 +18,8 @@ spec:
       multiCluster:
         clusterName: "${CLUSTER}"
       network: "${CLUSTER_NETWORK}"
+  meshConfig:
+    accessLogFile: /dev/stdout
 EOF
 
 istioctl install -f vm-cluster.yaml -y
