@@ -24,8 +24,8 @@ EOF
 
 istioctl install -f vm-cluster.yaml -y
 
-if ! kubectl apply -f addons/; then
-  sleep 5 && kubectl apply -f addons/
-fi
+#if ! kubectl apply -f addons/; then
+#  sleep 5 && kubectl apply -f addons/
+#fi
 
 # kubectl label namespace default istio-injection=enabled
